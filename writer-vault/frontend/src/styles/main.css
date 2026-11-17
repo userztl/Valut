@@ -1,0 +1,153 @@
+/* ============================================================
+   设计令牌：极简暗黑主题（参考 Obsidian / Notion / VS Code）
+   所有布局尺寸使用 clamp 自适应分辨率与窗口大小
+   ============================================================ */
+:root {
+  /* ---- 色板：大面积深灰 + 柔和蓝紫强调色 ---- */
+  --bg-base: #121212;               /* 主内容区背景（极深灰） */
+  --bg-elevated: #1e1e1e;           /* 侧栏 / Inspector 背景（稍亮深灰） */
+  --bg-hover: #2d2d2d;              /* 悬停背景 */
+  --bg-selected: #3a3a3a;           /* 选中背景 */
+  --bg-input: #242424;              /* 输入框背景 */
+  --bg-card-head: #262626;          /* 画布卡片标题栏 */
+  --bg-card: #252526;               /* 实体卡片 / 画布节点背景 */
+
+  --border-subtle: #333333;         /* 1px 分割线 */
+  --border-strong: #3d3d3d;
+
+  --text-primary: #e0e0e0;          /* 主文字 */
+  --text-secondary: #888888;        /* 辅助文字 */
+  --text-tertiary: #666666;
+
+  --primary: #5c6bc0;               /* 强调色：柔和蓝紫 */
+  --primary-strong: #7986cb;
+  --primary-bg: rgba(92, 107, 192, 0.15);
+  --primary-bg-hover: rgba(92, 107, 192, 0.28);
+  --danger: #e57373;
+
+  /* ---- 字体：无衬线，行高宽松 ---- */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  /* 全局字号缩放因子：由 html[data-fs] 档位切换，所有 --fs-* 均乘以该因子 */
+  --font-scale: 1;
+  --fs-body: calc(clamp(12px, 0.8vw + 5px, 14px) * var(--font-scale));      /* 界面正文 */
+  --fs-doc: calc(clamp(14px, 0.85vw + 5px, 16px) * var(--font-scale));      /* 文档正文 */
+  --fs-title: calc(clamp(15px, 1vw + 5px, 18px) * var(--font-scale));       /* 主区标题 */
+  --fs-inspector: calc(clamp(18px, 1.3vw + 6px, 23px) * var(--font-scale)); /* Inspector 大标题 */
+  --fs-caption: calc(clamp(10px, 0.5vw + 5px, 12px) * var(--font-scale));   /* 小标题/辅助文字 */
+  --fs-card: calc(var(--fs-caption) * 0.9);                                 /* 画布卡片文字（最小档） */
+  --lh-doc: 1.8;                    /* 文档行高 */
+  --lh-relaxed: 1.6;
+
+  /* ---- 圆角与投影 ---- */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  /* ---- 间距刻度：全局统一（缺失会导致所有引用它的声明整体失效） ---- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.35);
+  --shadow-card-drag: 0 10px 28px rgba(0, 0, 0, 0.55);
+
+  /* ---- 布局：随窗口自适应，不固定 px ---- */
+  --sidebar-w: clamp(220px, 20vw, 300px);       /* 左侧边栏 */
+  --topbar-h: clamp(40px, 4.5vh, 48px);         /* 全局顶栏 */
+  --inspector-w: clamp(260px, 24vw, 340px);     /* 右侧详情面板 */
+  --header-h: clamp(44px, 5.5vh, 56px);         /* 主区 Header */
+
+  /* ---- 动效 ---- */
+  --transition-fast: 0.2s ease;
+  --transition-slide: 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ---- Element Plus 暗黑变量对齐主题 ---- */
+  --el-color-primary: #5c6bc0;
+  --el-color-primary-light-3: #7986cb;
+  --el-color-primary-light-7: #3a4170;
+  --el-color-primary-light-8: #303660;
+  --el-color-primary-light-9: var(--primary-bg);
+  --el-color-primary-dark-2: #4a58a8;
+  --el-bg-color: #141414;
+  --el-bg-color-overlay: #1e1e1e;
+  --el-fill-color-light: #2d2d2d;
+  --el-fill-color-blank: #242424;
+  --el-border-color: #333333;
+  --el-border-color-light: #333333;
+  --el-border-color-lighter: #2d2d2d;
+  --el-text-color-primary: #e0e0e0;
+  --el-text-color-regular: #888888;
+  --el-text-color-secondary: #666666;
+  --el-font-size-base: var(--fs-body);
+  --el-font-size-small: var(--fs-caption);
+  --el-font-size-extra-small: var(--fs-caption);
+}
+
+/* ============================================================
+   全局字号档位：小 / 标准 / 大（由 ui store 写入 html[data-fs]）
+   只需切换一个属性，所有 --fs-* 与 Element Plus 字号同步缩放
+   ============================================================ */
+html[data-fs='sm'] { --font-scale: 0.88; }
+html[data-fs='md'] { --font-scale: 1; }
+html[data-fs='lg'] { --font-scale: 1.12; }
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  color: var(--text-primary);
+  background: var(--bg-base);
+}
+
+/* 文本选中色跟随强调色 */
+::selection {
+  background: var(--primary-bg-hover);
+}
+
+/* 全局隐藏滚动条（仅目录树 / 文本内容区 / 卡片列表内部保留细滚动条） */
+* {
+  scrollbar-width: none;
+}
+/* 全局滚动条美化：6px 宽，深灰滑轨 + 中灰滑块 + 悬浮亮灰 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #4d4d4d;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-elevated);
+}
+.scrollable {
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+.scrollable::-webkit-scrollbar {
+  width: 6px;
+}
+.scrollable::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 3px;
+}
+.scrollable::-webkit-scrollbar-thumb:hover {
+  background: #4d4d4d;
+}
+.scrollable::-webkit-scrollbar-track {
+  background: var(--bg-elevated);
+}

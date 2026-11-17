@@ -1,0 +1,11 @@
+:80 {
+	# 后端 API 反向代理
+	handle /api/* {
+		reverse_proxy backend:3000
+	}
+
+	# 其余请求 -> 前端静态资源容器（资源代理）
+	handle {
+		reverse_proxy frontend:80
+	}
+}
